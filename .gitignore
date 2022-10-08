@@ -3,6 +3,7 @@ other_files
 secrets
 
 #
+.coverage*
 *.ini
 *_env
 .pytest_cache
