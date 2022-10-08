@@ -1,0 +1,11 @@
+SERVICE_NAME = "DRAW"
+
+DEFAULT_MESSAGE_BROKER_HOST = "localhost"
+DEFAULT_MESSAGE_BROKER_PORT = 5672
+
+DEFAULT_MESSAGE_QUEUE_DRAWING_EVENT = "lotto_drawing_event"
+DEFAULT_MESSAGE_EXCHANGE = ""  # lotto
+
+CONFIGURATION_AVAILABLE_OPTIONS = ["message_broker_host", "message_broker_port"]
+
+TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S%z"
