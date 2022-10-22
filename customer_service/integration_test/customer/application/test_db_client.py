@@ -1,10 +1,18 @@
 import pytest
 from testcontainers.mongodb import MongoDbContainer
+from fastapi.encoders import jsonable_encoder
+from pymongo import MongoClient
 
 from src.customer.application.db_client import db_client
 from src.customer.application.models import Bet
 
-# docker run --rm -p 27017:27017 mongo:latest
+@pytest.fixture(scope="session")
+def testcontainer():
+    with MongoDbContainer("mongo:latest").with_bind_ports(27017, 27017) as mongo:
+        print("MongoDB available")
+        yield mongo
+        print("MongoDB closed")
+
 @pytest.fixture
 def mock_config(monkeypatch) -> None:
     test_config = {
@@ -14,19 +22,24 @@ def mock_config(monkeypatch) -> None:
         }
     monkeypatch.setattr(db_client, "config", test_config)
 
-def test_add_bet(mock_config):
+def insert_for_tests(to_insert: list[Bet]):
+    db = MongoClient('mongodb://localhost:27017', username="test", password="test")
+    for element in to_insert:
+        _ = db.database['test'].insert_one(jsonable_encoder(element))
+    db.close()
+    return to_insert
+
+def test_add_bet(mock_config, testcontainer):
     test_bet = Bet(user="123", winning_numbers=[1,2,3,4,5,6], super_number=[0])
     test_created_object = Bet(**db_client.add_bet(test_bet))
-    import pdb; pdb.set_trace()
+
     assert test_created_object.user == test_bet.user
     assert test_created_object.winning_numbers == test_bet.winning_numbers
     assert test_created_object.super_number == test_bet.super_number
 
-def test_get_bets(mock_config):
-    # depends on own implementation
-    # setup does not encompass clean up
+def test_get_bets(mock_config, testcontainer):
     test_data = {"user": "123", "winning_numbers": [1,2,3,4,5,6], "super_number":[0]}
-    test_objects = [Bet(**db_client.add_bet(Bet(**test_data))) for i in range(0,3)]
+    test_objects = [insert_for_tests([Bet(**test_data)]) for i in range(0,3)]
 
     test_result = [Bet(**result) for result in db_client.get_bets()]
 
