@@ -1,8 +1,14 @@
 
 other_files
 secrets
+docs
+templates
+TODO
+.pre-commit-config.yaml
 
 #
+*.cfg
+.coverage*
 *.ini
 *_env
 .pytest_cache

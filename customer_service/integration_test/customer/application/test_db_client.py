@@ -43,4 +43,7 @@ def test_get_bets(mock_config, testcontainer):
 
     test_result = [Bet(**result) for result in db_client.get_bets()]
 
-    assert len(test_result) == len(test_objects)
+    assert len(test_result) == len(test_objects)+1 # TODO: dependent on previous test
+
+def test_update_bet():
+    pass
