@@ -1,0 +1,50 @@
+version: '3.6'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbit_mq
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    volumes:
+    - cnd_rabbitmq_data:/var/lib/rabbitmq/
+    - cnd_rabbitmq_log:/var/log/rabbitmq/
+    networks:
+      - cnd_network
+    
+  mongodb:
+    image: mongo:latest
+    ports:
+    - "27017:27017"
+    volumes:
+      - cnd_mongodb_data:/data/db
+    networks:
+      - cnd_network
+  
+  drawing_service:
+    build:
+      context: ../drawing_service
+      dockerfile: Dockerfile
+    ports:
+    - "8080:8080"
+    networks:
+    - cnd_network
+
+  customer_service:
+    build:
+      context: ../customer_service
+      dockerfile: Dockerfile
+    ports:
+    - "8085:8080"
+    networks:
+      - cnd_network
+
+volumes:
+  cnd_rabbitmq_data:
+  cnd_rabbitmq_log:
+  cnd_mongodb_data:
+
+networks:
+  cnd_network:
+    driver: bridge
