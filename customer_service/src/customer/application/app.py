@@ -3,6 +3,8 @@ from fastapi import FastAPI, status
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
+
+from src.customer.application.db_client import db_client
 from src.customer.application.models import Bet
 
 api = FastAPI()
@@ -17,13 +19,12 @@ async def default_route():
 async def index():
     return "Hello World!"
 
-@api.get("/add_bet")
-async def add_bet(bet: Bet) -> JSONResponse:
-    #TODO: 
-    bet_to_add = Bet(**{"winning_numbers":[1,2,3,4,5,6], "super_number" :[0]})
-    return JSONResponse(content=jsonable_encoder(bet_to_add))
+@api.post("/add_bet")
+async def add_bet(bet_to_add: Bet) -> JSONResponse: 
+    added_bet = db_client.add_bet(bet_to_add)
+    return JSONResponse(content=jsonable_encoder(added_bet), status_code=status.HTTP_201_CREATED)
 
-@api.post("/show_results")
+@api.get("/show_results")
 async def show_results() -> JSONResponse:
-    #TODO:
-    return JSONResponse(content=jsonable_encoder("Results"))
+    evaluated_bets = db_client.get_bets()
+    return JSONResponse(content=jsonable_encoder(evaluated_bets))
