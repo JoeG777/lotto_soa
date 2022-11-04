@@ -1,6 +1,8 @@
 from dotenv import dotenv_values
 from pymongo import MongoClient
 from fastapi.encoders import jsonable_encoder
+
+from src.customer.exceptions import CustomerServiceException
 from src.customer.application.models import Bet
 
 
@@ -20,6 +22,8 @@ class DBClient:
 
     def get_bets(self):
         bets = list(self.client.database[self.config["DB_NAME"]].find(limit=10))
+        if len(bets) == 0:
+            raise CustomerServiceException("No entries available")
         return bets
     
     def update_bets(self, bets: list[Bet]):
