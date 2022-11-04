@@ -1,13 +1,20 @@
-from fastapi import FastAPI
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Request
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
 
 from src.customer.application.db_client import db_client
 from src.customer.application.models import Bet
+from src.customer.exceptions import CustomerServiceException
 
 api = FastAPI()
+
+@api.exception_handler(CustomerServiceException)
+async def generic_exception_handler(request: Request, exc: CustomerServiceException):
+    return JSONResponse(
+        status_code=500,
+        content={"message":f"Something went wrong! - {exc.args[0]}"}
+    )
 
 api.mount("/static", StaticFiles(directory="src/customer/templates"))
 
