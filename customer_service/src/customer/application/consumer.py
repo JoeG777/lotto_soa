@@ -1,8 +1,8 @@
 import asyncio
 import json
+import os
 
 import aiormq
-import pika
 from src.customer.application.bets_matcher import match_bets
 from src.customer.application.db_client import db_client
 from src.customer.application.models import LottoDraw
@@ -27,13 +27,12 @@ class AsyncRabbitConsumer:
     @classmethod
     async def async_consume(cls):
         # Perform connection
-        connection = await aiormq.connect("amqp://guest:guest@rabbitmq/") # TODO: via config
-
+        connection = await aiormq.connect(f"amqp://{os.environ.get('RABBIT_INIT_ROOT_USERNAME')}:{os.environ.get('RABBIT_INIT_ROOT_PASSWORD')}@{os.environ.get('RABBIT_HOST')}/")
         # Creating a channel
         channel = await connection.channel()
 
         # Declaring queue
-        declare_ok = await channel.queue_declare('lotto_drawing_event') # TODO: via config
+        declare_ok = await channel.queue_declare(os.environ.get("QUEUE_DRAWING_EVENT"))
         consume_ok = await channel.basic_consume(
             declare_ok.queue, cls.on_message, no_ack=True
         )

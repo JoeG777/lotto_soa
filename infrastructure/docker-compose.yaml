@@ -27,8 +27,8 @@ services:
     networks:
       - cnd_network
     environment:
-      MONGO_INITDB_ROOT_USERNAME: test
-      MONGO_INITDB_ROOT_PASSWORD: test
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
       interval: 10s
@@ -44,6 +44,13 @@ services:
     - "8080:8080"
     networks:
     - cnd_network
+    environment:
+      - RABBIT_INIT_ROOT_USERNAME=${RABBIT_INIT_ROOT_USERNAME}
+      - RABBIT_INIT_ROOT_PASSWORD=${RABBIT_INIT_ROOT_PASSWORD}
+      - RABBIT_PORT=${RABBIT_PORT}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
+      - DRAW_MESSAGE_EXCHANGE=${DRAW_MESSAGE_EXCHANGE}
 
   customer_service:
     build:
@@ -56,6 +63,17 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    environment:
+      - RABBIT_INIT_ROOT_USERNAME=${RABBIT_INIT_ROOT_USERNAME}
+      - RABBIT_INIT_ROOT_PASSWORD=${RABBIT_INIT_ROOT_PASSWORD}
+      - RABBIT_PORT=${RABBIT_PORT}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_HOST=${MONGO_HOST}
+      - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
+      - CUSTOMER_COLLECTION_NAME=${CUSTOMER_COLLECTION_NAME}
 
 volumes:
   cnd_rabbitmq_data:
