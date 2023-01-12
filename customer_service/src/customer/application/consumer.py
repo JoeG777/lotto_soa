@@ -1,26 +1,49 @@
-import pika
+import asyncio
 import json
 
-from src.customer.application.db_client import db_client
+import aiormq
+import pika
 from src.customer.application.bets_matcher import match_bets
+from src.customer.application.db_client import db_client
 from src.customer.application.models import LottoDraw
 
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
-channel = connection.channel()
 
-result = channel.queue_declare(queue='lotto_drawing_event')
-queue_name = result.method.queue
+class AsyncRabbitConsumer:
 
-print(' [*] Waiting for logs. To exit press CTRL+C')
+    @classmethod
+    async def on_message(cls, message):
+        """
+        on_message doesn't necessarily have to be defined as async.
+        Here it is to show that it's possible.
+        """
+        print(f" [x] Received message {message!r}")
+        print(f"Message body is: {message.body.decode('utf-8')}")
+        running_bets = db_client.get_bets()
+        evaluated_bets = match_bets(LottoDraw(**json.loads(message.body.decode('utf-8'))['lotto_draw']), running_bets)
+        db_client.update_bets(evaluated_bets)
+        print("Comparison done")
 
-def callback(ch, method, properties, body):
-    print(" [x] %r" % body.decode('utf-8'))
-    running_bets = db_client.get_bets()
-    evaluated_bets = match_bets(LottoDraw(**json.loads(body)), running_bets)
-    db_client.update_bets(evaluated_bets)
 
-channel.basic_consume(
-    queue=queue_name, on_message_callback=callback, auto_ack=True)
+    @classmethod
+    async def async_consume(cls):
+        # Perform connection
+        connection = await aiormq.connect("amqp://guest:guest@rabbitmq/") # TODO: via config
 
-channel.start_consuming()
+        # Creating a channel
+        channel = await connection.channel()
+
+        # Declaring queue
+        declare_ok = await channel.queue_declare('lotto_drawing_event') # TODO: via config
+        consume_ok = await channel.basic_consume(
+            declare_ok.queue, cls.on_message, no_ack=True
+        )
+    
+    @classmethod
+    def run(cls):
+        print("Start Forever loop")
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(cls.async_consume())
+        loop.run_forever()
+
+if __name__ == '__main__':
+    AsyncRabbitConsumer.run()

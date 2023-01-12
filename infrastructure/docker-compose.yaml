@@ -21,6 +21,15 @@ services:
       - cnd_mongodb_data:/data/db
     networks:
       - cnd_network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: test
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
   
   drawing_service:
     build:

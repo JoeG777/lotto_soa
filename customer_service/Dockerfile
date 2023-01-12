@@ -4,7 +4,10 @@ COPY src/requirements.txt /usr/src/requirements.txt
 RUN pip install -r /usr/src/requirements.txt
 
 COPY src /usr/src
+COPY .env /usr/.env
+COPY start_script/run_parallel.sh /usr/run_parallel.sh
+COPY start_script/run_specific.sh /usr/run_specific.sh
 
 WORKDIR /usr
 EXPOSE 8080
-CMD [ "uvicorn", "src.customer.application.app:api", "--host", "0.0.0.0", "--port", "8080" ]
+CMD ./run_specific.sh

@@ -1,7 +1,7 @@
 from src.customer.application.models import LottoDraw, Bet
 from src.customer.application.winning_classes import winning_classes
 
-def match_bets(lotto_draw, bets: list[Bet]):
+def match_bets(lotto_draw: LottoDraw, bets: list[Bet]) -> list[Bet]:
     for bet in bets:
         bet.winning_class = calculate_winning_class(lotto_draw, bet)
     return bets

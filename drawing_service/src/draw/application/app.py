@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from src.draw.application.models import LottoDraw
+from datetime import datetime
+
+from src.draw.application.models import LottoDraw, LottoDrawEvent
 from src.draw.application.drawer import Drawer
 from src.draw.application.publisher import Publisher
 
@@ -11,6 +13,6 @@ def index():
 
 @api.get("/trigger_draw")
 def trigger_draw() -> LottoDraw:
-    lotto_draw = Drawer.draw()
-    Publisher.publish_message(lotto_draw)
+    lotto_draw: LottoDraw = Drawer.draw()
+    Publisher.publish_message(LottoDrawEvent(lotto_draw=lotto_draw, timestamp=datetime.now()))
     return lotto_draw
