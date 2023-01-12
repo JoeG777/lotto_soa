@@ -4,7 +4,7 @@ from src.draw.application.models import LottoDraw
 
 
 class Drawer:
-    SUPER_NUMBER_SET = range(1, 50)
+    WINNING_NUMBERS_SET = range(1, 50)
     WINNING_NUMBERS_TO_SELECT = 6
     SUPER_NUMBER_SET = range(0, 10)
     SUPER_NUMBER_TO_SELECT = 1
@@ -18,7 +18,7 @@ class Drawer:
     @classmethod
     def draw_winning_numbers(cls) -> list[int]:
         winning_numbers = random.sample(
-            cls.SUPER_NUMBER_SET, k=cls.WINNING_NUMBERS_TO_SELECT
+            cls.WINNING_NUMBERS_SET, k=cls.WINNING_NUMBERS_TO_SELECT
         )
         return winning_numbers
 

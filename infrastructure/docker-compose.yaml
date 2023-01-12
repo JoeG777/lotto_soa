@@ -12,6 +12,11 @@ services:
     - cnd_rabbitmq_log:/var/log/rabbitmq/
     networks:
       - cnd_network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 3
     
   mongodb:
     image: mongo:latest
@@ -48,6 +53,9 @@ services:
     - "8085:8080"
     networks:
       - cnd_network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   cnd_rabbitmq_data:
