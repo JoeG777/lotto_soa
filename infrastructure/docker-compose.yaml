@@ -21,7 +21,7 @@ services:
   mongodb:
     image: mongo:latest
     ports:
-    - "27017:27017"
+    - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
       - cnd_mongodb_data:/data/db
     networks:
@@ -75,6 +75,7 @@ services:
       - MONGO_HOST=${MONGO_HOST}
       - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
       - CUSTOMER_COLLECTION_NAME=${CUSTOMER_COLLECTION_NAME}
+      - CUSTOMER_DATABASE_NAME=${CUSTOMER_DATABASE_NAME}
       - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
 
 volumes:
