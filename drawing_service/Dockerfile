@@ -8,11 +8,14 @@ ENV RABBIT_HOST=${RABBIT_HOST}
 ENV QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
 ENV DRAW_MESSAGE_EXCHANGE=${DRAW_MESSAGE_EXCHANGE}
 
+ENV DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
+
 COPY src/requirements.txt /usr/src/requirements.txt
 RUN pip install -r /usr/src/requirements.txt
 
 COPY src /usr/src
 
 WORKDIR /usr
-EXPOSE 8080
-CMD [ "uvicorn", "src.draw.application.app:api", "--host", "0.0.0.0", "--port", "8080" ]
+EXPOSE $DEFAULT_INTERNAL_SERVICE_PORT
+
+CMD uvicorn src.draw.application.app:api --host 0.0.0.0 --port $DEFAULT_INTERNAL_SERVICE_PORT

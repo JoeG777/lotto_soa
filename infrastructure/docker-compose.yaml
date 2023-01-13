@@ -5,8 +5,8 @@ services:
     image: rabbitmq:3.9-management
     container_name: rabbit_mq
     ports:
-    - "5672:5672"
-    - "15672:15672"
+    - "${RABBIT_PORT}:${RABBIT_PORT}"
+    - "${RABBIT_MGMT_PORT}:${RABBIT_MGMT_PORT}"
     volumes:
     - cnd_rabbitmq_data:/var/lib/rabbitmq/
     - cnd_rabbitmq_log:/var/log/rabbitmq/
@@ -30,7 +30,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:${MONGO_PORT}/test --quiet
       interval: 10s
       timeout: 10s
       retries: 5
@@ -41,7 +41,7 @@ services:
       context: ../drawing_service
       dockerfile: Dockerfile
     ports:
-    - "8080:8080"
+    - "${DRAW_SERVICE_PORT}:8080"
     networks:
     - cnd_network
     environment:
@@ -51,13 +51,14 @@ services:
       - RABBIT_HOST=${RABBIT_HOST}
       - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
       - DRAW_MESSAGE_EXCHANGE=${DRAW_MESSAGE_EXCHANGE}
+      - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
 
   customer_service:
     build:
       context: ../customer_service
       dockerfile: Dockerfile
     ports:
-    - "8085:8080"
+    - "${CUSTOMER_SERVICE_PORT}:8080"
     networks:
       - cnd_network
     depends_on:
@@ -74,6 +75,7 @@ services:
       - MONGO_HOST=${MONGO_HOST}
       - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
       - CUSTOMER_COLLECTION_NAME=${CUSTOMER_COLLECTION_NAME}
+      - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
 
 volumes:
   cnd_rabbitmq_data:

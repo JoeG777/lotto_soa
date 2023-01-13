@@ -13,15 +13,15 @@ ENV MONGO_HOST=${MONGO_HOST}
 ENV QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
 ENV CUSTOMER_COLLECTION_NAME=${CUSTOMER_COLLECTION_NAME}
 
+ENV DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
+
 
 COPY src/requirements.txt /usr/src/requirements.txt
 RUN pip install -r /usr/src/requirements.txt
 
 COPY src /usr/src
-COPY .env /usr/.env
-COPY start_script/run_parallel.sh /usr/run_parallel.sh
-COPY start_script/run_specific.sh /usr/run_specific.sh
+COPY start_script/run.sh /usr/run.sh
 
 WORKDIR /usr
-EXPOSE 8080
-CMD ./run_specific.sh
+EXPOSE ${DEFAULT_INTERNAL_SERVICE_PORT}
+CMD ./run.sh ${DEFAULT_INTERNAL_SERVICE_PORT}
