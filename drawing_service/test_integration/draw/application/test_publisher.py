@@ -7,7 +7,6 @@ from testcontainers.rabbitmq import RabbitMqContainer
 from src.draw.application.models import LottoDraw, LottoDrawEvent
 
 from src.draw.application.publisher import Publisher
-from src.draw.common import constants
 
 class TestPublisher:
     
@@ -24,8 +23,8 @@ class TestPublisher:
     @pytest.fixture
     def check_for_message(self, rabbitmq_instance):
         def inner():
-            rabbitmq_instance.queue_declare(constants.DEFAULT_MESSAGE_QUEUE_DRAWING_EVENT, passive=True)
-            method_frame, header_frame, body = rabbitmq_instance.basic_get(constants.DEFAULT_MESSAGE_QUEUE_DRAWING_EVENT)
+            rabbitmq_instance.queue_declare(os.environ.get("QUEUE_DRAWING_EVENT"), passive=True)
+            method_frame, header_frame, body = rabbitmq_instance.basic_get(os.environ.get("QUEUE_DRAWING_EVENT"))
             if method_frame:
                 print(method_frame, header_frame, body)
             else:

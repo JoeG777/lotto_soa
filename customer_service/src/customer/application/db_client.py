@@ -1,4 +1,3 @@
-from dotenv import dotenv_values
 import os
 from pymongo import MongoClient
 from fastapi.encoders import jsonable_encoder
@@ -6,10 +5,8 @@ from fastapi.encoders import jsonable_encoder
 from src.customer.exceptions import CustomerServiceException
 from src.customer.application.models import Bet
 
-# TODO: databasemodels and api facings
 class DBClient:
     client: MongoClient
-    config = dotenv_values(".env")
 
     def __init__(self):
         self.client = MongoClient(f"mongodb://{os.environ.get('MONGO_HOST')}:{os.environ.get('MONGO_PORT')}", username=os.environ.get('MONGO_INITDB_ROOT_USERNAME'), password=os.environ.get('MONGO_INITDB_ROOT_PASSWORD'))
@@ -44,7 +41,10 @@ class DBClient:
         return updated_records
     
     def __del__(self):
-        if self.client:
-            self.client.close()
+        try:
+            if self.client:
+                self.client.close()
+        except AttributeError:
+            print("No client to close")
 
 db_client = DBClient()
