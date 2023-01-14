@@ -45,6 +45,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile
+          file: ./drawing_service/Dockerfile
           push: false
           tags: ${{secrets.DOCKERHUB_USERNAME}}/drawing_service:0.1.0
