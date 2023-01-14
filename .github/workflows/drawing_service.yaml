@@ -27,4 +27,4 @@ jobs:
         run: |
           pytest test --cov=src
       - name: Build drawing_service Docker image
-        run: docker build . --file ./Dockerfile joeg7/drawing_service:0.1.0
+        run: docker build --file ./Dockerfile --tag joeg7/drawing_service:0.1.0 .
