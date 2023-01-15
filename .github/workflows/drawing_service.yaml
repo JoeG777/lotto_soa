@@ -30,9 +30,8 @@ jobs:
       - 
         name: Test with pytest
         run: |
-          pwd
           python -c "import sys; print(sys.path)"
-          pytest test --cov=src
+          python -m pytest test --cov=src
       - 
         name: Docker Hub Login
         uses: docker/login-action@v2
