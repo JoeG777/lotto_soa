@@ -22,14 +22,14 @@ spec:
           env:
             - name: RABBIT_INIT_ROOT_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: lotto-config
-                  key: RABBIT_INIT_ROOT_USERNAME
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_user
             - name: RABBIT_INIT_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: lotto-config
-                  key: RABBIT_INIT_ROOT_PASSWORD
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_password
             - name: RABBIT_PORT
               valueFrom:
                 configMapKeyRef:
@@ -42,14 +42,14 @@ spec:
                   key: RABBIT_HOST
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: lotto-config
-                  key: MONGO_INITDB_ROOT_USERNAME
+                secretKeyRef:
+                  name: cse-secrets
+                  key: mongo_user
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: lotto-config
-                  key: MONGO_INITDB_ROOT_PASSWORD
+                secretKeyRef:
+                  name: cse-secrets
+                  key: mongo_password
             - name: MONGO_PORT
               valueFrom:
                 configMapKeyRef:

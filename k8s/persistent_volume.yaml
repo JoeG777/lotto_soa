@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "C:/Users/18247/Desktop/CASE_CND_K8s"
+    path: # input own path
 
 ---
 

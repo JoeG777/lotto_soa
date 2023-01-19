@@ -21,14 +21,14 @@ spec:
           env:
             - name: RABBIT_INIT_ROOT_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: lotto-config
-                  key: RABBIT_INIT_ROOT_USERNAME
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_user
             - name: RABBIT_INIT_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: lotto-config
-                  key: RABBIT_INIT_ROOT_PASSWORD
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_password
             - name: RABBIT_PORT
               valueFrom:
                 configMapKeyRef:

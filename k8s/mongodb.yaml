@@ -28,13 +28,13 @@ spec:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
             secretKeyRef:
-              name: mongodb-secrets
-              key: user
+              name: cse-secrets
+              key: mongo_user
         - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mongodb-secrets
-              key: password
+              name: cse-secrets
+              key: mongo_password
         volumeMounts:
         - name: "mongo-storage-dir"
           mountPath: "/data/db"
