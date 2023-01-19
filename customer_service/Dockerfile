@@ -22,6 +22,7 @@ RUN pip install -r /usr/src/requirements.txt
 
 COPY src /usr/src
 COPY start_script/run.sh /usr/run.sh
+RUN chmod +x /usr/run.sh
 
 WORKDIR /usr
 EXPOSE $DEFAULT_INTERNAL_SERVICE_PORT
