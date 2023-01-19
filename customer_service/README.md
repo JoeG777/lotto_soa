@@ -37,6 +37,17 @@ This can be achieved by manually setting them or putting them into an `.env` fil
     ```
 
 ### Docker
+**Dockerfile** - The dockerfile is the instruction on how to create the image which on execution becomes an instance or usually refered to as a container. In the [adjacent dockerfile](./Dockerfile) the following steps are performed:
+1. Select the base image to built upon
+2. Set all the environment variables which will be present upon runtime for the application
+3. Install the dependencies for python
+4. Copy the source code into the image
+5. Copy the start script and make it executeable
+6. Set Workdirectory and document the port on which the application will run 
+7. Supply a default command for starting the application
+
+**Execution**
+
 1. Build the docker container with a desired name and tag
     ```
     docker build -t customer_service:0.1.0 .
