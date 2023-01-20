@@ -3,7 +3,7 @@ version: '3.6'
 services:
   rabbitmq:
     image: rabbitmq:3.9-management
-    container_name: rabbit_mq
+    container_name: rabbitmq
     ports:
     - "${RABBIT_PORT}:${RABBIT_PORT}"
     - "${RABBIT_MGMT_PORT}:${RABBIT_MGMT_PORT}"
@@ -20,6 +20,7 @@ services:
     
   mongodb:
     image: mongo:latest
+    container_name: mongodb
     ports:
     - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
@@ -37,6 +38,7 @@ services:
       start_period: 10s
   
   drawing_service:
+    container_name: drawing_service
     build:
       context: ../drawing_service
       dockerfile: Dockerfile
@@ -52,15 +54,21 @@ services:
       - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
       - DRAW_MESSAGE_EXCHANGE=${DRAW_MESSAGE_EXCHANGE}
       - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
+    healthcheck:
+        test: curl --fail http://localhost:8080/docs || exit 1
+        interval: 20s
+        timeout: 10s
+        retries: 5
 
   customer_service:
+    container_name: customer_service
     build:
       context: ../customer_service
       dockerfile: Dockerfile
     ports:
     - "${CUSTOMER_SERVICE_PORT}:8080"
     networks:
-      - cnd_network
+      - cnd_network 
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -77,7 +85,13 @@ services:
       - CUSTOMER_COLLECTION_NAME=${CUSTOMER_COLLECTION_NAME}
       - CUSTOMER_DATABASE_NAME=${CUSTOMER_DATABASE_NAME}
       - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
-  ngnix:
+    healthcheck:
+        test: curl --fail http://localhost:8080/docs || exit 1
+        interval: 20s
+        timeout: 10s
+        retries: 5
+
+  nginx:
     image: nginx:1.21
     ports:
       - "80:80"
