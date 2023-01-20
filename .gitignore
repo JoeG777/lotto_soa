@@ -1,7 +1,6 @@
 
 other_files
 secrets
-docs
 templates
 TODO
 .pre-commit-config.yaml
@@ -14,6 +13,8 @@ TODO
 .pytest_cache
 .vscode
 *.code-workspace
+*.bkp
+*.drawio
 
 #------------------------
 
