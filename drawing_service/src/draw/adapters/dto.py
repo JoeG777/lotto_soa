@@ -4,7 +4,7 @@ from datetime import datetime
 from src.draw.common import constants
 
 
-class LottoDraw(BaseModel):
+class LottoDrawResponse(BaseModel):
     winning_numbers: list[int] = Field(
         ..., title="Winning Numbers", description="Normal drawn numbers"
     )
@@ -24,12 +24,3 @@ class LottoDraw(BaseModel):
             raise ValueError(f"{values} invalid - Choose numbers between 0 and 9")
         return values
 
-class LottoDrawEvent(BaseModel):
-    lotto_draw: LottoDraw = Field(
-        ..., title="Lotto Draw", description="The object holding the lotto numbers"
-    )
-    timestamp: datetime = Field(
-        datetime.now().strftime(constants.TIMESTAMP_FORMAT),
-        title="Timestamp",
-        description="Timestamp of the event",
-    )
