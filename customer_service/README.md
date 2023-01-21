@@ -1,7 +1,8 @@
-# Drawing Service
+# Customer Service
+This service offers endpoints for
 
-This service offers endpoints for 
-    - `/trigger_draw` - triggering a lotto draw
+    - `/register_bets` - registering a new lotto bet
+    - `/show_results` - request to take a look at the current status of your bet
 The endpoints and their documentation via a Swagger UI is reacheable on the `/docs` endpoint once the application is running.
 
 ### Configuration
@@ -13,6 +14,13 @@ The service needs the following environment variables at runtime:
     QUEUE_DRAWING_EVENT= {name of the queue to publish to on the RabbitMQ instance}
     DRAW_MESSAGE_EXCHANGE= {exchange key on the RabbitMQ instance}
 
+    MONGO_INITDB_ROOT_USERNAME= {username to authenticat against a database on MongoDB instance}
+    MONGO_INITDB_ROOT_PASSWORD= {password to authenticat against a database on MongoDB instance}
+    MONGO_PORT= {port of MongoDB instance}
+    MONGO_HOST= {host of MongoDB instance}}
+
+    CUSTOMER_COLLECTION_NAME= {collection name on MongoDB instance}
+    CUSTOMER_DATABASE_NAME= {database name on MongoDB instance}
     DEFAULT_INTERNAL_SERVICE_PORT= {default port where the application should run (only for docker)}
     ```
 This can be achieved by manually setting them or putting them into an `.env` file. This file can be conveniently used for [docker execution](#docker) as well.
@@ -25,7 +33,7 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 2. Make sure a RabbitMQ instance is running and has been configured via the environment variables to be reached by the publisher
 3. Start the service by excuting the following command
     ```bash
-    uvicorn src.draw.application.app:api --host 127.0.0.1 --port 8080
+    uvicorn src.customer.application.app:api --host 127.0.0.1 --port 8080
     ```
 
 ### Docker
@@ -34,16 +42,17 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 2. Set all the environment variables which will be present upon runtime for the application
 3. Install the dependencies for python
 4. Copy the source code into the image
-5. Set Workdirectory and document the port on which the application will run 
-6. Supply a default command for starting the application
+5. Copy the start script and make it executeable
+6. Set Workdirectory and document the port on which the application will run 
+7. Supply a default command for starting the application
 
 **Execution**
 
 1. Build the docker container with a desired name and tag
     ```
-    docker build -t drawing_service:0.1.0 .
+    docker build -t customer_service:0.1.0 .
     ```
 2. Run it 
     ```
-    docker run --rm --env-file .env -p 8080:8080 drawing_service:0.1.0
+    docker run --rm --env-file .env -p 8080:8080 customer_service:0.1.0
     ```
