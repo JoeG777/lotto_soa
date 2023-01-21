@@ -41,9 +41,15 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 
 1. Build the docker container with a desired name and tag
     ```
+    cd .\drawing_service\
+    docker create network lotto_local
     docker build -t drawing_service:0.1.0 .
     ```
 2. Run it 
     ```
-    docker run --rm --env-file .env -p 8080:8080 drawing_service:0.1.0
+    docker run --rm --env-file ../.env \
+        --network=lotto_local \
+        --name drawing_service \
+        -p 8080:8080 \
+        drawing_service:0.1.0
     ```

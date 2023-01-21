@@ -14,9 +14,7 @@ class Publisher:
         try:
             channel = con.channel()
             channel.queue_declare(os.environ.get("QUEUE_DRAWING_EVENT"), passive=False)
-            import pdb
 
-            pdb.set_trace()
             channel.basic_publish(
                 exchange="",
                 routing_key=os.environ.get("QUEUE_DRAWING_EVENT"),

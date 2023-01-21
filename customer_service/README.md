@@ -50,9 +50,11 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 
 1. Build the docker container with a desired name and tag
     ```
+    cd .\customer_service\
+    docker network create lotto_local
     docker build -t customer_service:0.1.0 .
     ```
 2. Run it 
     ```
-    docker run --rm --env-file .env -p 8080:8080 customer_service:0.1.0
+    docker run --rm --env-file ../.env --network=lotto_local --name customer_service -p 8085:8080 customer_service:0.1.0
     ```
