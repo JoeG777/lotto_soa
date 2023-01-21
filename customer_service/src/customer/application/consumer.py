@@ -3,6 +3,7 @@ import json
 import os
 
 import aiormq
+
 from src.customer.application.bets_matcher import match_bets
 from src.customer.application.db_client import db_client
 from src.customer.application.models import LottoDraw
