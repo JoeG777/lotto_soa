@@ -58,7 +58,7 @@ Depending of the configuration mechanism of choice the actual command of executi
     ```
     These environment variables will be passed down from the invocation of the compose file into each service which will use them for configuring themselves.
 3. Execute the command
-    - provide the path to the file as we reside in the root directory of this project
+    - provide the path to the file as we reside in the **root directory** of this project
     - pass the .env-file as a parameter
     - tell docker compose to re-build the services if necessary
 
@@ -66,3 +66,5 @@ Depending of the configuration mechanism of choice the actual command of executi
     ```bash
     docker compose --env-file .env -f .\infrastructure\docker-compose.yaml up --build
     ```
+
+    In case the `customer_service` does not start properly the first time and consequently the `nginx` service lacks a dependency execute the above command again with the addition of those two services.

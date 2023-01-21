@@ -8,7 +8,7 @@ spec:
       - host: localhost
         http:
           paths:
-          - path: /register_bet
+          - path: /add_bet
             pathType: Prefix
             backend:
               service:
