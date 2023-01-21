@@ -19,4 +19,4 @@ COPY src /usr/src
 WORKDIR /usr
 EXPOSE $DEFAULT_INTERNAL_SERVICE_PORT
 
-CMD uvicorn src.draw.application.app:api --host 0.0.0.0 --port $DEFAULT_INTERNAL_SERVICE_PORT
+CMD uvicorn src.draw.adapters.rest.app:api --host 0.0.0.0 --port $DEFAULT_INTERNAL_SERVICE_PORT

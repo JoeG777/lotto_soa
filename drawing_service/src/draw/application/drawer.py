@@ -1,28 +1,30 @@
 import random
 
-from src.draw.application.models import LottoDraw
+
+from src.draw.domain.models import LottoDraw
+
+from src.draw.domain.i_drawer import IDrawer
+from src.draw.adapters.mq.lotto_draw_event_handler import LottoDrawEventHandler
 
 
-class Drawer:
-    WINNING_NUMBERS_SET = range(1, 50)
-    WINNING_NUMBERS_TO_SELECT = 6
-    SUPER_NUMBER_SET = range(0, 10)
-    SUPER_NUMBER_TO_SELECT = 1
+class Drawer(IDrawer):
+    def draw(self) -> LottoDraw:
+        winning_numbers = self.draw_winning_numbers()
+        super_number = self.draw_super_number()
+        lotto_results = LottoDraw(
+            winning_numbers=winning_numbers, super_number=super_number
+        )
+        LottoDrawEventHandler.lotto_draw_event_created(lotto_results)
+        return lotto_results
 
-    @classmethod
-    def draw(cls) -> LottoDraw:
-        winning_numbers = cls.draw_winning_numbers()
-        super_number = cls.draw_super_number()
-        return LottoDraw(winning_numbers=winning_numbers, super_number=super_number)
-
-    @classmethod
-    def draw_winning_numbers(cls) -> list[int]:
+    def draw_winning_numbers(self) -> list[int]:
         winning_numbers = random.sample(
-            cls.WINNING_NUMBERS_SET, k=cls.WINNING_NUMBERS_TO_SELECT
+            self.WINNING_NUMBERS_SET, k=self.WINNING_NUMBERS_TO_SELECT
         )
         return winning_numbers
 
-    @classmethod
-    def draw_super_number(cls) -> list[int]:
-        super_number = random.sample(cls.SUPER_NUMBER_SET, k=cls.SUPER_NUMBER_TO_SELECT)
+    def draw_super_number(self) -> list[int]:
+        super_number = random.sample(
+            self.SUPER_NUMBER_SET, k=self.SUPER_NUMBER_TO_SELECT
+        )
         return super_number

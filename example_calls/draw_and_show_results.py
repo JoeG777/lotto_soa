@@ -1,4 +1,5 @@
 import requests
+import time
 
 import example_calls.register_bet as register_bet
 
@@ -12,7 +13,11 @@ import example_calls.register_bet as register_bet
         # - view_results shows winning_class without "null" - corresponds to matching with result
 
 
-BASE_URI = "http://localhost:8080"
+BASE_URI = "http://localhost:8088/draw_master_endpoint" 
+# for native execution "http://localhost:8080"
+# for docker standalone "http://drawing_service:8080"
+# for compose "http://localhost:8088/draw_master_endpoint"
+# for k8s "http://localhost"
 
 def show_empty_database():
     available_bets_in_db = register_bet.check_for_registered_bet()
@@ -40,6 +45,9 @@ if __name__ == '__main__':
 
     print(f"\n>>> Trigger a Lotto Draw:\n")
     print(trigger_draw().content)
+
+    print(f"\n>>> Sleep to give async listener chance to handle evaluation of bets:\n")
+    time.sleep(5)
 
     print(f"\n>>> Show results of draw:\n")
     print(show_results().content)

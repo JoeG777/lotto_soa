@@ -1,7 +1,10 @@
 import requests
 
-BASE_URI = "http://localhost:8085"
-
+BASE_URI = "http://localhost:8088/customer_endpoint"#"http://localhost:8085"
+# for native execution "http://localhost:8085"
+# for docker standalone "http://drawing_service:8085"
+# for compose "http://localhost:8088/customer_endpoint"
+# for k8s "http://localhost"
 
 def register_bet():
     test_bet = {

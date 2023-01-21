@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: drawing-service
-          image: joeg7/drawing_service:0.1.0
+          image: drawing_service:0.1.0
           env:
             - name: RABBIT_INIT_ROOT_USERNAME
               valueFrom:

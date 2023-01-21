@@ -1,7 +1,7 @@
 # Customer Service
 This service offers endpoints for
 
-    - `/register_bets` - registering a new lotto bet
+    - `/add_bet` - registering a new lotto bet
     - `/show_results` - request to take a look at the current status of your bet
 The endpoints and their documentation via a Swagger UI is reacheable on the `/docs` endpoint once the application is running.
 
@@ -50,9 +50,11 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 
 1. Build the docker container with a desired name and tag
     ```
+    cd .\customer_service\
+    docker network create lotto_local
     docker build -t customer_service:0.1.0 .
     ```
 2. Run it 
     ```
-    docker run --rm --env-file .env -p 8080:8080 customer_service:0.1.0
+    docker run --rm --env-file ../.env --network=lotto_local --name customer_service -p 8085:8080 customer_service:0.1.0
     ```
