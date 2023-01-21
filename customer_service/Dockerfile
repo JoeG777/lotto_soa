@@ -19,9 +19,11 @@ ENV DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
 
 COPY src/requirements.txt /usr/src/requirements.txt
 RUN pip install -r /usr/src/requirements.txt
+RUN apk --no-cache add curl
 
 COPY src /usr/src
 COPY start_script/run.sh /usr/run.sh
+RUN chmod +x /usr/run.sh
 
 WORKDIR /usr
 EXPOSE $DEFAULT_INTERNAL_SERVICE_PORT

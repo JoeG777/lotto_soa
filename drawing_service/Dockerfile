@@ -12,6 +12,7 @@ ENV DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
 
 COPY src/requirements.txt /usr/src/requirements.txt
 RUN pip install -r /usr/src/requirements.txt
+RUN apk --no-cache add curl
 
 COPY src /usr/src
 

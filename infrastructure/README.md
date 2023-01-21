@@ -1,21 +1,24 @@
 # 5. Docker Compose der Services, Dokumentation der Ausführung, NGNIX als Load Balancer
 
-The attached [docker-compose.yaml-File](./docker-compose.yaml) configures the whole architecture whith the following top-level entities:
+The attached [docker-compose.yaml-File](./docker-compose.yaml) configures the whole architecture with the following top-level entities:
 
-## Services
+### Services
+- **drawing_service** - One service of the application responsible for drawing the winning numbers. Uses the docker compose mechanism of being built by the dockerfile, exposing the ports, attach to a docker network and supply the container with environment variables.
+- **customer_service** - One service of the application responsible for handling bets registered by users and evaluating them based of the numbers supplied by the above service. Uses the docker compose mechanism of being built by the dockerfile, exposing the ports, attach to a docker network and supply the container with environment variables. Depends on the running rabbitmq-service to connect to on startup.
 ### Infrastructure
 - **rabbitmq** - The message broker which holds the mechanisms for two services to asynchronously share messages
 - **mongodb** - The NoSQL database is responsible for the persistance of data that flows through the system
 - **ngnix** - GNIX acts as reverse proxy to bring abstraction over the access of the application from outside the network
-- **drawing_service**
-- **customer_service** 
 
-## Volumes
+### Volumes
+Define volumes for making sure the persistence layer is independent from the lifecycle of the containers and above described components. As they are to be used only inside the application they are realized as docker managed without intended access for the developer or operator.
 
-## Network
+### Network
 - **cnd_network** - One main docker network with the default driver `bridge` is created for two main reasones:
     1. During the development it is necessary to be able to access the whole application by optional port-forwarding onto the development machine for direct access
     2. During production we want to be able to access all the available services to talk to each other by using docker builtin DNS via the container names.
+
+---
 
 ### Executing the Docker Compose File
 
