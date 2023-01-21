@@ -16,7 +16,7 @@ spec:
         app: cse-mongo-db
     spec:
       containers:
-      - image: mongo:latest
+      - image: mongo:6.0.3
         name: cse-mongo-db
         ports:
           - containerPort: 27017

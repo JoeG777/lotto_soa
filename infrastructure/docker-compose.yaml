@@ -19,7 +19,7 @@ services:
       retries: 3
     
   mongodb:
-    image: mongo:latest
+    image: mongo:6.0.3
     container_name: mongodb
     ports:
     - "${MONGO_PORT}:${MONGO_PORT}"

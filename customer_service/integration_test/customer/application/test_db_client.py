@@ -14,7 +14,7 @@ TEST_CONNECTION_STRING = f"mongodb://localhost:{os.environ.get('MONGO_PORT')}"
 
 @pytest.fixture(scope="session")
 def testcontainer():
-    with MongoDbContainer("mongo:latest").with_bind_ports(os.environ.get("MONGO_PORT"), os.environ.get("MONGO_PORT")) as mongo:
+    with MongoDbContainer("mongo:6.0.3").with_bind_ports(os.environ.get("MONGO_PORT"), os.environ.get("MONGO_PORT")) as mongo:
         print("MongoDB available")
         yield mongo
         print("MongoDB closed")
