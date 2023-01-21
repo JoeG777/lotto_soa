@@ -7,7 +7,14 @@ from src.customer.application.db_client import db_client
 from src.customer.application.models import Bet
 from src.customer.exceptions import CustomerServiceException
 
-api = FastAPI()
+api = FastAPI(
+    title="Customer Service",
+    description="",
+    version="0.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
+)
 
 @api.exception_handler(CustomerServiceException)
 async def generic_exception_handler(request: Request, exc: CustomerServiceException):

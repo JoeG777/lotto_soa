@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cse-drawing-service
+  labels:
+    app: cse-drawing-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cse-drawing-service
+  template:
+    metadata:
+      labels:
+        app: cse-drawing-service
+    spec:
+      containers:
+        - name: drawing-service
+          image: joeg7/drawing_service:0.1.0
+          env:
+            - name: RABBIT_INIT_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_user
+            - name: RABBIT_INIT_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_password
+            - name: RABBIT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: RABBIT_PORT
+            - name: RABBIT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: RABBIT_HOST
+            - name: QUEUE_DRAWING_EVENT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: QUEUE_DRAWING_EVENT
+            - name: DRAW_MESSAGE_EXCHANGE
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: DRAW_MESSAGE_EXCHANGE
+            - name: DEFAULT_INTERNAL_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: DEFAULT_INTERNAL_SERVICE_PORT
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "100m"
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cse-drawing-service
+  labels:
+    app: cse-drawing-service
+spec:
+  selector:
+    app: cse-drawing-service
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  type: ClusterIP
