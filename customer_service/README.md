@@ -1,7 +1,7 @@
 # Customer Service
 This service offers endpoints for
 
-    - `/register_bets` - registering a new lotto bet
+    - `/add_bet` - registering a new lotto bet
     - `/show_results` - request to take a look at the current status of your bet
 The endpoints and their documentation via a Swagger UI is reacheable on the `/docs` endpoint once the application is running.
 

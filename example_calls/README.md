@@ -2,7 +2,7 @@
 
 ### [Register a test-bet and verify its presence](./register_bet.py)
 
-This short skript registers a dummy bet at the `/register_bet` endpoint of the customer service. Consequently, the entirety of the registered bets in the databse is shown by calling the `/show_results` endpoint.
+This short skript registers a dummy bet at the `/add_bet` endpoint of the customer service. Consequently, the entirety of the registered bets in the databse is shown by calling the `/show_results` endpoint.
 
 Before using this script it is necessary to adjust the `BASE_URI` where the service is currently running.
 
