@@ -47,4 +47,4 @@ As the previous step for [configuring](#configuration) is done the whole applica
     kubectl apply -f ./k8s/
     ```
 
-In case the `customer_service` does not start properly the first time execute the above command again or restart the deployment for this service again.
+In case the `customer_service` does not start properly the first time execute the above command again or restart the deployment for this service.
