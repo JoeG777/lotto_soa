@@ -21,11 +21,6 @@ Some of the services need to authenticate agains other services with credentials
 The following variables and respective values are needed inside the ConfigMap. Changing of these values may need further adjustment in their corresponding deployments or services.
 
 ```
-  RABBIT_MGMT_PORT:
-  DRAW_SERVICE_PORT:
-  CUSTOMER_SERVICE_PORT:
-  DEFAULT_INTERNAL_SERVICE_PORT:
-
   MONGO_INITDB_ROOT_USERNAME:
   MONGO_INITDB_ROOT_PASSWORD:
   MONGO_PORT:
