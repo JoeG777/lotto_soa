@@ -23,7 +23,6 @@ async def generic_exception_handler(request: Request, exc: CustomerServiceExcept
         content={"message":f"Something went wrong! - {exc.args[0]}"}
     )
 
-api.mount("/static", StaticFiles(directory="src/customer/templates"))
 
 @api.get("/")
 async def default_route():
