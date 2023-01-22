@@ -21,11 +21,6 @@ Some of the services need to authenticate agains other services with credentials
 The following variables and respective values are needed inside the ConfigMap. Changing of these values may need further adjustment in their corresponding deployments or services.
 
 ```
-  RABBIT_MGMT_PORT:
-  DRAW_SERVICE_PORT:
-  CUSTOMER_SERVICE_PORT:
-  DEFAULT_INTERNAL_SERVICE_PORT:
-
   MONGO_INITDB_ROOT_USERNAME:
   MONGO_INITDB_ROOT_PASSWORD:
   MONGO_PORT:
@@ -52,4 +47,4 @@ As the previous step for [configuring](#configuration) is done the whole applica
     kubectl apply -f ./k8s/
     ```
 
-In case the `customer_service` does not start properly the first time execute the above command again or restart the deployment for this service again.
+In case the `customer_service` does not start properly the first time execute the above command again or restart the deployment for this service.

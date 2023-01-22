@@ -3,9 +3,6 @@ kind: ConfigMap
 metadata:
   name: lotto-config
 data:
-  RABBIT_MGMT_PORT: "15672"
-  DRAW_SERVICE_PORT: "8080"
-  CUSTOMER_SERVICE_PORT: "8085"
   DEFAULT_INTERNAL_SERVICE_PORT: "8080"
   MONGO_PORT: "27017"
   MONGO_HOST: mongodb
