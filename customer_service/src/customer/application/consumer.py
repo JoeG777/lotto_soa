@@ -46,4 +46,14 @@ class AsyncRabbitConsumer:
         loop.run_forever()
 
 if __name__ == '__main__':
-    AsyncRabbitConsumer.run()
+    import time
+    RETRY_NECESSARY = True
+    while RETRY_NECESSARY:
+        try:
+            AsyncRabbitConsumer.run()
+            RETRY_NECESSARY = False
+        except ConnectionError as ce:
+            RETRY_NECESSARY = True
+            print(f"{ce.args}")
+            print("Waiting for Message Broker to be ready\n>>> Trying to reconnect...")
+            time.sleep(5)
