@@ -1,7 +1,4 @@
 from pydantic import BaseModel, Field, validator
-from datetime import datetime
-
-from src.draw.common import constants
 
 
 class LottoDrawResponse(BaseModel):
@@ -13,14 +10,13 @@ class LottoDrawResponse(BaseModel):
     )
 
     @validator("winning_numbers")
-    def validate_winning_numbers(cls, values: list[int]) -> None:
+    def validate_winning_numbers(cls, values: list[int]) -> list[int]:
         if not list(filter(lambda x: x > 0 and x < 50, values)):
             raise ValueError(f"{values} invalid - Choose numbers between 1 and 49")
         return values
 
     @validator("super_number")
-    def validate_super_number(cls, values: list[int]) -> None:
+    def validate_super_number(cls, values: list[int]) -> list[int]:
         if not list(filter(lambda x: x >= 0 and x < 10, values)):
             raise ValueError(f"{values} invalid - Choose numbers between 0 and 9")
         return values
-

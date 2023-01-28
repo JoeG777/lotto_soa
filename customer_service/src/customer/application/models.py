@@ -14,21 +14,24 @@ class LottoDraw(BaseModel):
     )
 
     @validator("winning_numbers")
-    def validate_winning_numbers(cls, values: list[int]) -> None:
+    def validate_winning_numbers(cls, values: list[int]) -> list[int]:
         if not list(filter(lambda x: x > 0 and x < 50, values)):
             raise ValueError(f"{values} invalid - Choose numbers between 1 and 49")
         return values
 
     @validator("super_number")
-    def validate_super_number(cls, values: list[int]) -> None:
+    def validate_super_number(cls, values: list[int]) -> list[int]:
         if not list(filter(lambda x: x >= 0 and x < 10, values)):
             raise ValueError(f"{values} invalid - Choose numbers between 0 and 9")
         return values
 
+
 class Bet(LottoDraw):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     user: str = Field(
-        ..., title="Username", description="The name of the user the bet is registered with"
+        ...,
+        title="Username",
+        description="The name of the user the bet is registered with",
     )
     timestamp: datetime = Field(
         datetime.now().strftime(constants.TIMESTAMP_FORMAT),
@@ -36,4 +39,7 @@ class Bet(LottoDraw):
         description="Timestamp of the event",
     )
     winning_class: int = Field(
-        None, title="Winnging Class", description="The Winning Class this bet resides in after been matched with a LottoDraw")
+        None,
+        title="Winnging Class",
+        description="The Winning Class this bet resides in after been matched with a LottoDraw",
+    )

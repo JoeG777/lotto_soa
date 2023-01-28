@@ -13,29 +13,36 @@ api = FastAPI(
     version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
 )
 
+
 @api.exception_handler(CustomerServiceException)
-async def generic_exception_handler(request: Request, exc: CustomerServiceException):
+async def generic_exception_handler(request: Request, exc: CustomerServiceException) -> JSONResponse:
     return JSONResponse(
-        status_code=500,
-        content={"message":f"Something went wrong! - {exc.args[0]}"}
+        status_code=500, content={"message": f"Something went wrong! - {exc.args[0]}"}
     )
 
 
 @api.get("/")
-async def default_route():
-    return RedirectResponse(url="/index", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+async def default_route() -> RedirectResponse:
+    return RedirectResponse(
+        url="/index", status_code=status.HTTP_307_TEMPORARY_REDIRECT
+    )
+
 
 @api.get("/index")
-async def index():
+async def index() -> str:
     return "Hello World!"
 
+
 @api.post("/add_bet")
-async def add_bet(bet_to_add: Bet) -> JSONResponse: 
+async def add_bet(bet_to_add: Bet) -> JSONResponse:
     added_bet = db_client.add_bet(bet_to_add)
-    return JSONResponse(content=jsonable_encoder(added_bet), status_code=status.HTTP_201_CREATED)
+    return JSONResponse(
+        content=jsonable_encoder(added_bet), status_code=status.HTTP_201_CREATED
+    )
+
 
 @api.get("/show_results")
 async def show_results() -> JSONResponse:
