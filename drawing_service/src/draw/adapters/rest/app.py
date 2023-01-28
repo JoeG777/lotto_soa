@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from dataclasses import asdict
 
-from src.draw.adapters.dto import LottoDrawResponse
+from src.draw.domain.models import LottoDraw
 from src.draw.domain.i_drawer import IDrawer
 from src.draw.application.drawer import Drawer
+from src.draw.adapters.dto import LottoDrawResponse
 
 
 api = FastAPI(
@@ -21,6 +23,6 @@ def index():
 
 
 @api.get("/trigger_draw")
-def trigger_draw() -> LottoDrawResponse:
-    lotto_draw: IDrawer = Drawer().draw()
-    return lotto_draw
+def trigger_draw(drawer: IDrawer = Depends(Drawer)) -> LottoDrawResponse:
+    lotto_draw: LottoDraw = drawer.draw()
+    return LottoDrawResponse(**asdict(lotto_draw))

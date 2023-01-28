@@ -7,7 +7,7 @@ from src.draw.domain.models import LottoDraw, DrawerConfig
 
 class IDrawer(metaclass=abc.ABCMeta):
     def __init__(
-        self, config: Union[dict, DrawerConfig] = asdict(DrawerConfig())
+        self, config: dict = asdict(DrawerConfig())
     ) -> None:
         self.WINNING_NUMBERS_SET = config["WINNING_NUMBERS_SET"]
         self.WINNING_NUMBERS_TO_SELECT = config["WINNING_NUMBERS_TO_SELECT"]
