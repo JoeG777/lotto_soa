@@ -25,7 +25,7 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 2. Make sure a RabbitMQ instance is running and has been configured via the environment variables to be reached by the publisher
 3. Start the service by excuting the following command
     ```bash
-    uvicorn src.draw.application.app:api --host 127.0.0.1 --port 8080
+    uvicorn src.draw.adapters.rest.app:api --host 127.0.0.1 --port 8080
     ```
 
 ### Docker
