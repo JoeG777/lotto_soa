@@ -47,4 +47,8 @@ As the previous step for [configuring](#configuration) is done the whole applica
     kubectl apply -f ./k8s/
     ```
 
-In case the `customer_service` does not start properly the first time execute the above command again or restart the deployment for this service.
+`RabbitMQ` takes some time to start up. Until then the application will not work in unison. The broker is ready when the output logs stop at the following line
+```
+2050-02-31 56:13:17.195196+00:00 [info] <0.677.0>  * rabbitmq_management_agent
+```
+Consequently, the `customer_service` will connect to it.
