@@ -8,7 +8,7 @@ def Autowire(dependency: Callable[..., Any]) -> Any:
         TypeError(f"Supply Callable. Got {type(dependency)}")
 
     if isinstance(dependency, type):
-        to_call = autowire_class_type(dependency=dependency)
+        to_call = autowire_class_type(cls_dependency=dependency)
     else:
         to_call = dependency
 
@@ -16,8 +16,8 @@ def Autowire(dependency: Callable[..., Any]) -> Any:
 
 
 def autowire_class_type(cls_dependency: type) -> type:
-    """Takes in a class definition and determines which type needs to be called to 
-    later instantiate an object. 
+    """Takes in a class definition and determines which type needs to be called to
+    later instantiate an object.
     Use Case primary for abstract class definitions whose concrete implemention will be
     looked up in the `__subclasses_` call.
 
@@ -29,7 +29,7 @@ def autowire_class_type(cls_dependency: type) -> type:
 
     Returns:
         type: The type definition which should be used
-    """    
+    """
     cls_to_call: Callable[..., Any] = None
 
     if not is_abstract(cls_dependency):

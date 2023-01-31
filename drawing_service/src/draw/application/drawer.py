@@ -3,9 +3,7 @@ import random
 from src.draw.common.autowire import Autowire
 from src.draw.domain.models import LottoDraw
 from src.draw.domain.i_drawer import IDrawer
-from src.draw.adapters.mq.lotto_draw_event_handler import (
-    ILottoDrawEventHandler
-)
+from src.draw.adapters.mq.lotto_draw_event_handler import ILottoDrawEventHandler
 
 
 class Drawer(IDrawer):
