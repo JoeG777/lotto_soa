@@ -2,17 +2,10 @@ import abc
 from datetime import datetime
 
 from src.draw.common.autowire import Autowire
+from src.draw.ports.i_lotto_draw_event_handler import ILottoDrawEventHandler
 from src.draw.adapters.mq.publisher import Publisher
 from src.draw.adapters.mq.dto.lotto_draw_event import LottoDrawEvent
 from src.draw.domain.models import LottoDraw
-
-
-class ILottoDrawEventHandler(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
-    def lotto_draw_event_created(self, lotto_results: LottoDraw) -> None:
-        raise NotImplementedError
-
-
 
 
 class LottoDrawEventHandler(ILottoDrawEventHandler):
