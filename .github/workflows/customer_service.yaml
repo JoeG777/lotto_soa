@@ -51,4 +51,4 @@ jobs:
           context: "{{defaultContext}}:customer_service"
           file: ./Dockerfile
           push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/customer_service:0.1.0
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/customer_service:0.2.0

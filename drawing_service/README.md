@@ -25,7 +25,7 @@ This can be achieved by manually setting them or putting them into an `.env` fil
 2. Make sure a RabbitMQ instance is running and has been configured via the environment variables to be reached by the publisher
 3. Start the service by excuting the following command
     ```bash
-    uvicorn src.draw.application.app:api --host 127.0.0.1 --port 8080
+    uvicorn src.draw.adapters.rest.app:api --host 127.0.0.1 --port 8080
     ```
 
 ### Docker
@@ -43,7 +43,7 @@ This can be achieved by manually setting them or putting them into an `.env` fil
     ```
     cd .\drawing_service\
     docker create network lotto_local
-    docker build -t drawing_service:0.1.0 .
+    docker build -t drawing_service:0.2.0 .
     ```
 2. Run it 
     ```
@@ -51,5 +51,5 @@ This can be achieved by manually setting them or putting them into an `.env` fil
         --network=lotto_local \
         --name drawing_service \
         -p 8080:8080 \
-        drawing_service:0.1.0
+        drawing_service:0.2.0
     ```
