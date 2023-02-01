@@ -1,5 +1,6 @@
 import random
 
+from fastapi import Depends
 from src.draw.common.autowire import Autowire
 from src.draw.domain.models import LottoDraw
 from src.draw.domain.i_drawer import IDrawer
@@ -12,8 +13,8 @@ class Drawer(IDrawer):
 
     def __init__(
         self,
-        lotto_draw_event_handler: ILottoDrawEventHandler = Autowire(
-            ILottoDrawEventHandler
+        lotto_draw_event_handler: ILottoDrawEventHandler = Depends(
+            Autowire(ILottoDrawEventHandler)
         ),
     ) -> None:
         super().__init__()

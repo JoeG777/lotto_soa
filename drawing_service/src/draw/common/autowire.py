@@ -1,7 +1,27 @@
 from typing import Callable, Any
 
 
-def Autowire(dependency: Callable[..., Any]) -> Any:
+def Autowire(dependency: Callable[..., Any]) -> Callable[..., Any]:
+    """
+    This function is only used in conjunction with fastapis `Depends` function to be found in the fastapi/param_functions.py#Depends().
+    This function offers the possibility to request an abstract-interface class as an dependency which has only one implementing class in this
+    context.
+    ```
+    def hello(instance = Depends(Autowire(SpecialClass))) -> SpecialClass:
+        return instance
+    ```
+    The mechanism from fastapi is documented here https://fastapi.tiangolo.com/tutorial/dependencies/
+    The benefit over fastapis implementation is that `Autowire` mirrors more closely the implementation of `@Autowired`
+    in the Java Spring Boot Framework as it is also possible to insert an interface-type here. The function will
+    identify the implementing class and instantiate this instead of the abstract interface type which would normally
+    throw an error.
+
+    Args:
+        dependency (Callable[..., Any]): Any dependency that should be called or executed
+
+    Returns:
+        Any: Result of the call of the dependency
+    """
     to_call: Callable[..., Any] = None
 
     if not callable(dependency):
@@ -12,7 +32,7 @@ def Autowire(dependency: Callable[..., Any]) -> Any:
     else:
         to_call = dependency
 
-    return to_call()
+    return to_call
 
 
 def autowire_class_type(cls_dependency: type) -> type:
