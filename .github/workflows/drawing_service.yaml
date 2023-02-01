@@ -51,4 +51,4 @@ jobs:
           context: "{{defaultContext}}:drawing_service"
           file: ./Dockerfile
           push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/drawing_service:0.2.0
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/drawing_service:0.3.0

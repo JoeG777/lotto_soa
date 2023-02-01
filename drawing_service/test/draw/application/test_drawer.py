@@ -1,3 +1,4 @@
+from src.draw.adapters.rest import app # needs to be imported first
 from src.draw.application.drawer import Drawer
 from src.draw.domain.models import LottoDraw
 
@@ -25,6 +26,6 @@ class TestDrawer:
         assert (test_result[0] >= 0) and (test_result[0] <= 49)
 
     #def test_draw(self):
-        #test_result = Drawer().draw()
+       #test_result = Drawer().draw() # TODO: resolve by mocking lotto_draw_event_handler with method "lotto_draw_event_created"
         
         #assert isinstance(test_result, LottoDraw)
