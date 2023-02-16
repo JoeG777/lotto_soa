@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cse-customer-service
+  labels:
+    app: cse-customer-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cse-customer-service
+  template:
+    metadata:
+      labels:
+        app: cse-customer-service
+    spec:
+      containers:
+        - name: cse-customer-service
+          image: joeg7/customer_service:0.2.0 
+          env:
+            - name: RABBIT_INIT_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_user
+            - name: RABBIT_INIT_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cse-secrets
+                  key: rabbit_password
+            - name: RABBIT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: RABBIT_PORT
+            - name: RABBIT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: RABBIT_HOST
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cse-secrets
+                  key: mongo_user
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cse-secrets
+                  key: mongo_password
+            - name: MONGO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: MONGO_PORT
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: MONGO_HOST
+            - name: QUEUE_DRAWING_EVENT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: QUEUE_DRAWING_EVENT
+            - name: CUSTOMER_COLLECTION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: CUSTOMER_COLLECTION_NAME
+            - name: CUSTOMER_DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: CUSTOMER_DATABASE_NAME
+            - name: DEFAULT_INTERNAL_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: lotto-config
+                  key: DEFAULT_INTERNAL_SERVICE_PORT
+          
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "100m"
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cse-customer-service
+  labels:
+    app: cse-customer-service
+spec:
+  selector:
+    app: cse-customer-service
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  type: ClusterIP

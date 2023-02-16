@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lotto-config
+data:
+  DEFAULT_INTERNAL_SERVICE_PORT: "8080"
+  MONGO_PORT: "27017"
+  MONGO_HOST: mongodb
+  RABBIT_PORT: "5672"
+  RABBIT_HOST: rabbitmq
+  QUEUE_DRAWING_EVENT: lotto_drawing_event
+  DRAW_MESSAGE_EXCHANGE: ""
+  CUSTOMER_DATABASE_NAME: lotto
+  CUSTOMER_COLLECTION_NAME: user_bets

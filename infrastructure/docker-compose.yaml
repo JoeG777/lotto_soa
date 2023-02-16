@@ -1,0 +1,116 @@
+version: '3.6'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+    - "${RABBIT_PORT}:${RABBIT_PORT}"
+    - "${RABBIT_MGMT_PORT}:${RABBIT_MGMT_PORT}"
+    volumes:
+    - cnd_rabbitmq_data:/var/lib/rabbitmq/
+    - cnd_rabbitmq_log:/var/log/rabbitmq/
+    networks:
+      - cnd_network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    
+  mongodb:
+    image: mongo:6.0.3
+    container_name: mongodb
+    ports:
+    - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - cnd_mongodb_data:/data/db
+    networks:
+      - cnd_network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:${MONGO_PORT}/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+  
+  drawing_service:
+    container_name: drawing_service
+    build:
+      context: ../drawing_service
+      dockerfile: Dockerfile
+    ports:
+    - "${DRAW_SERVICE_PORT}:8080"
+    networks:
+    - cnd_network
+    environment:
+      - RABBIT_INIT_ROOT_USERNAME=${RABBIT_INIT_ROOT_USERNAME}
+      - RABBIT_INIT_ROOT_PASSWORD=${RABBIT_INIT_ROOT_PASSWORD}
+      - RABBIT_PORT=${RABBIT_PORT}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
+      - DRAW_MESSAGE_EXCHANGE=${DRAW_MESSAGE_EXCHANGE}
+      - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
+    healthcheck:
+        test: curl --fail http://localhost:8080/docs || exit 1
+        interval: 20s
+        timeout: 10s
+        retries: 3
+
+  customer_service:
+    container_name: customer_service
+    build:
+      context: ../customer_service
+      dockerfile: Dockerfile
+    ports:
+    - "${CUSTOMER_SERVICE_PORT}:8080"
+    networks:
+      - cnd_network 
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - RABBIT_INIT_ROOT_USERNAME=${RABBIT_INIT_ROOT_USERNAME}
+      - RABBIT_INIT_ROOT_PASSWORD=${RABBIT_INIT_ROOT_PASSWORD}
+      - RABBIT_PORT=${RABBIT_PORT}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_HOST=${MONGO_HOST}
+      - QUEUE_DRAWING_EVENT=${QUEUE_DRAWING_EVENT}
+      - CUSTOMER_COLLECTION_NAME=${CUSTOMER_COLLECTION_NAME}
+      - CUSTOMER_DATABASE_NAME=${CUSTOMER_DATABASE_NAME}
+      - DEFAULT_INTERNAL_SERVICE_PORT=${DEFAULT_INTERNAL_SERVICE_PORT}
+    healthcheck:
+        test: curl --fail http://localhost:8080/docs || exit 1
+        interval: 20s
+        timeout: 10s
+        retries: 3
+
+  nginx:
+    image: nginx:1.21
+    ports:
+      - "8088:80"
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+    networks:
+      - cnd_network
+    depends_on:
+      customer_service:
+        condition: service_healthy
+      drawing_service:
+        condition: service_healthy
+
+volumes:
+  cnd_rabbitmq_data:
+  cnd_rabbitmq_log:
+  cnd_mongodb_data:
+
+networks:
+  cnd_network:
+    driver: bridge

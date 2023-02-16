@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cse-mongo-db
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cse-mongo-db
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: cse-mongo-db
+    spec:
+      containers:
+      - image: mongo:6.0.3
+        name: cse-mongo-db
+        ports:
+          - containerPort: 27017
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "100m"
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: cse-secrets
+              key: mongo_user
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cse-secrets
+              key: mongo_password
+        volumeMounts:
+        - name: "mongo-storage-dir"
+          mountPath: "/data/db"
+      volumes:
+      - name: "mongo-storage-dir"
+        persistentVolumeClaim:
+          claimName: "mongodb-persistent-volume-claim"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cse-mongo-db
+  name: mongodb
+spec:
+  ports:
+    - port: 27017
+      protocol: TCP
+      targetPort: 27017
+  selector:
+    app: cse-mongo-db
